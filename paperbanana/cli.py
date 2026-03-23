@@ -175,9 +175,7 @@ def generate(
     pdf_pages: Optional[str] = typer.Option(
         None,
         "--pdf-pages",
-        help=(
-            "PDF input only: 1-based pages (e.g. '1-5', '3', '1-3,7,10-12'); default: all pages"
-        ),
+        help=("PDF input only: 1-based pages (e.g. '1-5', '3', '1-3,7,10-12'); default: all pages"),
     ),
     verbose: bool = typer.Option(
         False, "--verbose", "-v", help="Show detailed agent progress and timing"
@@ -681,9 +679,7 @@ def batch(
         from paperbanana.core.source_loader import load_methodology_source
 
         try:
-            source_context = load_methodology_source(
-                input_path, pdf_pages=item.get("pdf_pages")
-            )
+            source_context = load_methodology_source(input_path, pdf_pages=item.get("pdf_pages"))
         except ImportError as e:
             console.print(f"[red]Skipping item '{item_id}': {e}[/red]")
             report["items"].append(
@@ -987,9 +983,7 @@ def setup():
 @app.command()
 def evaluate(
     generated: str = typer.Option(..., "--generated", "-g", help="Path to generated image"),
-    context: str = typer.Option(
-        ..., "--context", help="Path to source context text file or PDF"
-    ),
+    context: str = typer.Option(..., "--context", help="Path to source context text file or PDF"),
     caption: str = typer.Option(..., "--caption", "-c", help="Figure caption"),
     reference: str = typer.Option(..., "--reference", "-r", help="Path to human reference image"),
     vlm_provider: str = typer.Option(

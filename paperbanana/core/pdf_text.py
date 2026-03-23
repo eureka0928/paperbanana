@@ -50,9 +50,7 @@ def extract_text_from_pdf(path: Path, pages_spec: str | None = None) -> str:
     try:
         import fitz  # PyMuPDF
     except ImportError as e:
-        raise ImportError(
-            f"PDF input requires PyMuPDF. {_PDF_INSTALL_HINT}"
-        ) from e
+        raise ImportError(f"PDF input requires PyMuPDF. {_PDF_INSTALL_HINT}") from e
 
     path = Path(path)
     doc = fitz.open(path)

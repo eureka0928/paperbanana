@@ -1179,9 +1179,7 @@ def batch(
 
     # Auto-composite if manifest has a composite section
     if composite_config is not None:
-        output_paths = [
-            x["output_path"] for x in report["items"] if x.get("output_path")
-        ]
+        output_paths = [x["output_path"] for x in report["items"] if x.get("output_path")]
         if output_paths:
             from paperbanana.core.composite import compose_images
 
@@ -1197,9 +1195,7 @@ def batch(
                     label_position=composite_config.get("label_position", "bottom"),
                     output_path=comp_path,
                 )
-                console.print(
-                    f"  Composite: [bold]{comp_path}[/bold]"
-                )
+                console.print(f"  Composite: [bold]{comp_path}[/bold]")
             except Exception as e:
                 console.print(f"  [yellow]Composite failed: {e}[/yellow]")
 
@@ -1268,9 +1264,7 @@ def batch_report(
 
 @app.command()
 def composite(
-    images: list[str] = typer.Argument(
-        ..., help="Paths to images to compose into a single figure"
-    ),
+    images: list[str] = typer.Argument(..., help="Paths to images to compose into a single figure"),
     layout: str = typer.Option(
         "auto", "--layout", "-l", help="Grid layout: 'RxC' (e.g. '1x3', '2x2') or 'auto'"
     ),
@@ -1283,9 +1277,7 @@ def composite(
     label_position: str = typer.Option(
         "bottom", "--label-position", help="Label placement: 'top' or 'bottom'"
     ),
-    label_font_size: int = typer.Option(
-        32, "--label-font-size", help="Font size for panel labels"
-    ),
+    label_font_size: int = typer.Option(32, "--label-font-size", help="Font size for panel labels"),
     output: str = typer.Option(
         "composite_output.png", "--output", "-o", help="Output path for the composite image"
     ),

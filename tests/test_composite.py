@@ -161,9 +161,7 @@ def test_parse_composite_config_none():
 
 
 def test_parse_composite_config_auto_labels():
-    config = parse_composite_config(
-        {"items": [], "composite": {"layout": "1x3", "labels": "auto"}}
-    )
+    config = parse_composite_config({"items": [], "composite": {"layout": "1x3", "labels": "auto"}})
     assert config is not None
     assert config["layout"] == "1x3"
     assert config["auto_label"] is True
@@ -171,18 +169,14 @@ def test_parse_composite_config_auto_labels():
 
 
 def test_parse_composite_config_explicit_labels():
-    config = parse_composite_config(
-        {"items": [], "composite": {"labels": ["(a)", "(b)"]}}
-    )
+    config = parse_composite_config({"items": [], "composite": {"labels": ["(a)", "(b)"]}})
     assert config is not None
     assert config["auto_label"] is False
     assert config["labels"] == ["(a)", "(b)"]
 
 
 def test_parse_composite_config_no_labels():
-    config = parse_composite_config(
-        {"items": [], "composite": {"labels": None}}
-    )
+    config = parse_composite_config({"items": [], "composite": {"labels": None}})
     assert config is not None
     assert config["auto_label"] is False
     assert config["labels"] is None
@@ -216,9 +210,7 @@ def test_parse_composite_config_invalid_label_position():
 
 
 def test_parse_composite_config_output():
-    config = parse_composite_config(
-        {"items": [], "composite": {"output": "figure2.png"}}
-    )
+    config = parse_composite_config({"items": [], "composite": {"output": "figure2.png"}})
     assert config["output"] == "figure2.png"
 
 

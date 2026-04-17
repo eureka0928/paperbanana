@@ -240,6 +240,14 @@ def _provider_cell(item: dict[str, Any], which: Literal["vlm", "image"]) -> str:
     return f"{provider} / {model}" if model else str(provider)
 
 
+_MD_PIPE_ESCAPE = "\\|"
+
+
+def _md_escape(value: Any) -> str:
+    """Escape pipe characters for Markdown table cells."""
+    return str(value).replace("|", _MD_PIPE_ESCAPE)
+
+
 def _relative_output(out: str, sweep_dir: Path) -> str:
     """Convert an absolute output_path to a sweep-dir-relative path when possible."""
     if not out:
@@ -281,10 +289,12 @@ def generate_sweep_report_md(report: dict[str, Any], sweep_dir: Path) -> str:
             ]
         )
         for item in report.get("preview", []):
+            vlm = _md_escape(_provider_cell(item, "vlm"))
+            img = _md_escape(_provider_cell(item, "image"))
             lines.append(
                 f"| {item.get('variant_id', '—')} "
-                f"| {_provider_cell(item, 'vlm').replace('|', '\\|')} "
-                f"| {_provider_cell(item, 'image').replace('|', '\\|')} "
+                f"| {vlm} "
+                f"| {img} "
                 f"| {item.get('refinement_iterations', '—')} "
                 f"| {item.get('optimize_inputs', '—')} "
                 f"| {item.get('auto_refine', '—')} |"
@@ -319,11 +329,13 @@ def generate_sweep_report_md(report: dict[str, Any], sweep_dir: Path) -> str:
             ]
         )
         for rank, item in enumerate(top_n, start=1):
+            vlm = _md_escape(_provider_cell(item, "vlm"))
+            img = _md_escape(_provider_cell(item, "image"))
             lines.append(
                 f"| {rank} "
                 f"| {item.get('variant_id', '—')} "
-                f"| {_provider_cell(item, 'vlm').replace('|', '\\|')} "
-                f"| {_provider_cell(item, 'image').replace('|', '\\|')} "
+                f"| {vlm} "
+                f"| {img} "
                 f"| {item.get('iterations_used', '—')} "
                 f"| {item.get('critic_suggestions', '—')} "
                 f"| {item.get('quality_proxy_score', '—')} "
@@ -341,8 +353,8 @@ def generate_sweep_report_md(report: dict[str, Any], sweep_dir: Path) -> str:
     lines.extend(["", "## All Variants", "", header, divider])
     for item in report.get("results", []):
         vid = item.get("variant_id", "—")
-        vlm = _provider_cell(item, "vlm").replace("|", "\\|")
-        img = _provider_cell(item, "image").replace("|", "\\|")
+        vlm = _md_escape(_provider_cell(item, "vlm"))
+        img = _md_escape(_provider_cell(item, "image"))
         if item.get("status") == "success":
             status_cell = "✓ Success"
             iters = item.get("iterations_used", "—")
@@ -350,14 +362,14 @@ def generate_sweep_report_md(report: dict[str, Any], sweep_dir: Path) -> str:
             score = item.get("quality_proxy_score", "—")
             seconds = item.get("total_seconds", "—")
             out = _relative_output(item.get("output_path") or "", sweep_dir)
-            out_cell = f"`{out.replace('|', '\\|')}`" if out else "—"
+            out_cell = f"`{_md_escape(out)}`" if out else "—"
             lines.append(
                 f"| {vid} | {vlm} | {img} | {status_cell} | {iters} "
                 f"| {suggestions} | {score} | {seconds} | {out_cell} |"
             )
         else:
             status_cell = "✗ Failed"
-            err = (item.get("error") or "unknown").replace("|", "\\|")[:80]
+            err = _md_escape(item.get("error") or "unknown")[:80]
             lines.append(f"| {vid} | {vlm} | {img} | {status_cell} | — | — | — | — | {err} |")
 
     note = report.get("quality_proxy_note")
